@@ -1,17 +1,25 @@
 
+#!/usr/bin/env python
 # import necessary modules
+import itertools
 import time
-import datetime
 from robin_stocks import robinhood as r
 from rh_two_factor_log_in import loginmfa
-
 
 def is_price_near_strike(price, strike, tolerance):
     return (abs(price - strike) < tolerance)
 
 loginmfa()
 
-count = 0
+
+def waiting_spinner(interval):
+    """Show a waiting spinner"""
+    spinner = itertools.cycle(['-', '/', '|', '\\'])
+    for _ in range(10 * interval):
+        print(next(spinner), end='\r')
+        time.sleep(0.1)
+
+interval = 30 # in seconds
 
 # set up infinite loop that runs every 5 minutes
 while True:
@@ -55,9 +63,6 @@ while True:
         print("-----------------------------")
         print()
 
-    count += 1
-    print("Script has run:", count, "times.")
+    print("Waiting for {} seconds".format(interval))
+    waiting_spinner(interval)
     print("-----------------------------")
-    print()
-    # sleep for 15 minutes
-    time.sleep(900)
